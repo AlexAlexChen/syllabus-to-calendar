@@ -1,11 +1,13 @@
-// /lib/pdf.ts
 "use client";
 
-import { GlobalWorkerOptions, getDocument, type TextContent } from "pdfjs-dist";
+import { GlobalWorkerOptions, getDocument } from "pdfjs-dist";
 
-// Robust way: let the bundler resolve a real URL to the worker file
+// robust worker path that works in Next.js
 const workerUrl = new URL("pdfjs-dist/build/pdf.worker.mjs", import.meta.url).toString();
 GlobalWorkerOptions.workerSrc = workerUrl;
+
+type PdfTextItemLike = { str: string };
+type PdfTextContentLike = { items: PdfTextItemLike[] };
 
 export async function extractPdfText(file: File): Promise<string> {
   const buf = await file.arrayBuffer();
@@ -14,8 +16,8 @@ export async function extractPdfText(file: File): Promise<string> {
   let text = "";
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
-    const content: TextContent = await page.getTextContent();
-    text += content.items.map((it: any) => it.str).join(" ") + "\n";
+    const content = (await page.getTextContent()) as unknown as PdfTextContentLike;
+    text += content.items.map((it) => it.str).join(" ") + "\n";
   }
   return text;
 }

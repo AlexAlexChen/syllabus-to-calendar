@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import ical from "ical-generator";
+import ical, { ICalEventRepeatingFreq, type ICalWeekday } from "ical-generator";
 
 type RRule = { freq: "WEEKLY"; byDay: string[]; until: string };
 type Event = {
@@ -12,44 +12,42 @@ type Event = {
 };
 
 export async function POST(req: Request) {
-  const { events, calendarName = "Syllabus", timezone } = (await req.json()) as {
+  const {
+    events,
+    calendarName = "Syllabus",
+  }: {
     events: Event[];
     calendarName?: string;
-    timezone?: string;     // e.g., "America/New_York"
-  };
+  } = await req.json();
 
   const cal = ical({ name: calendarName });
 
-  // Set calendar timezone when supported by current ical-generator version
-  try {
-    if (timezone && typeof (cal as any).timezone === "function") {
-      (cal as any).timezone(timezone);
-    }
-  } catch {
-    // ignore – timezone is optional
-  }
-
   for (const e of events) {
-    // Normal (one-off) events OR recurring seed with RRULE
-    if (e.start) {
-      const base = {
-        summary: e.title,
-        start: new Date(e.start),
-        end: e.end
-          ? new Date(e.end)
-          : new Date(new Date(e.start).getTime() + 60 * 60 * 1000), // default 1h
-        location: e.location,
-        description: e.description,
-      } as any;
+    if (!e.start) continue;
 
-      if (e.rrule) {
-        base.repeating = {
-          freq: e.rrule.freq,     // "WEEKLY"
-          byDay: e.rrule.byDay,   // ["TU", "TH"]
+    const base = {
+      summary: e.title,
+      start: new Date(e.start),
+      end: e.end
+        ? new Date(e.end)
+        : new Date(new Date(e.start).getTime() + 60 * 60 * 1000),
+      location: e.location,
+      description: e.description,
+    };
+
+    if (e.rrule) {
+      // Cast to the library’s ICalWeekday type
+      const byDay = e.rrule.byDay.map((d) => d as ICalWeekday);
+
+      cal.createEvent({
+        ...base,
+        repeating: {
+          freq: ICalEventRepeatingFreq.WEEKLY,
+          byDay,
           until: new Date(e.rrule.until),
-        };
-      }
-
+        },
+      });
+    } else {
       cal.createEvent(base);
     }
   }
