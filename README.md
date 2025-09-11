@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📅 Syllabus → Calendar
 
-## Getting Started
+Convert syllabus schedules (text or PDF) into calendar events with .ics export.
+Built with Next.js, TypeScript, TailwindCSS, and pdf.js.
 
-First, run the development server:
+✨ Features
 
-```bash
+📂 Upload a syllabus PDF or paste raw text
+
+🔍 Parse single events (Midterms, Finals)
+
+🔁 Auto-detect recurring classes
+Example:
+Lecture every Tue/Thu 10:30 AM–11:50 AM from Sep 24, 2025 to Dec 12, 2025
+→ generates an RRULE repeating on Tue/Thu until the end date
+
+📝 Edit events in a table before exporting
+
+📤 Export to .ics → import into Google Calendar, Apple Calendar, Outlook, etc.
+
+🚀 Getting Started
+1. Clone the repo
+
+git clone https://github.com/AlexAlexChen/syllabus-to-calendar.git
+cd syllabus-to-calendar
+
+2. Install dependencies
+
+npm install
+
+3. Run locally
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+App will be live at http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Build & start
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+npm run build
+npm start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+📂 Project Structure
 
-## Learn More
+app/api/parse/route.ts → Parse syllabus text, detect recurrence
 
-To learn more about Next.js, take a look at the following resources:
+app/api/ics/route.ts → Generate ICS with RRULE
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+app/components/EventTable.tsx → Event editor table
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+app/page.tsx → Main UI
 
-## Deploy on Vercel
+lib/pdf.ts → PDF text extraction (pdf.js)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🛠️ Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 15 (App Router)
+
+TypeScript
+
+TailwindCSS
+
+pdfjs-dist
+
+chrono-node
+
+ical-generator
