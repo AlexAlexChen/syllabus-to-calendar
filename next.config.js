@@ -1,5 +1,17 @@
 // next.config.js
-const path = require("path");
-module.exports = {
-  outputFileTracingRoot: path.join(__dirname),
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    webpack(config) {
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        // pdfjs-dist has an optional require('canvas') for Node.
+        // In the browser build we don't want it resolved.
+        canvas: false,
+      };
+      return config;
+    },
+  };
+  
+  module.exports = nextConfig;
+  

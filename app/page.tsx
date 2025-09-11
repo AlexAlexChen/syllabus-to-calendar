@@ -9,11 +9,11 @@ export default function Page() {
 
   const fromPdf = async (f: File) => {
     setLoading(true);
-    const { extractPdfText } = await import("@/lib/pdf"); // 👈 dynamic import
+    const { extractPdfText } = await import("@/lib/pdf"); // good
     const t = await extractPdfText(f);
     setText(t);
     setLoading(false);
-  };
+  };  
 
   const parse = async () => {
     setLoading(true);
