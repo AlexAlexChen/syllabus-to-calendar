@@ -1,65 +1,86 @@
-📅 Syllabus → Calendar
+# 📅 Syllabus → Calendar
 
-Convert syllabus schedules (text or PDF) into calendar events with .ics export.
-Built with Next.js, TypeScript, TailwindCSS, and pdf.js.
+Convert syllabus schedules (text or PDF) into calendar events with `.ics` export.  
+Built with **Next.js**, **TypeScript**, **TailwindCSS**, **pdf.js**, and **ical-generator**.
 
-✨ Features
+---
 
-📂 Upload a syllabus PDF or paste raw text
+## 📋 Prerequisites
 
-🔍 Parse single events (Midterms, Finals)
+- **Node.js and npm**  
+  Install from the [official guide](https://nodejs.org/en/download).  
+  Confirm installation by running:  
 
-🔁 Auto-detect recurring classes
-Example:
-Lecture every Tue/Thu 10:30 AM–11:50 AM from Sep 24, 2025 to Dec 12, 2025
-→ generates an RRULE repeating on Tue/Thu until the end date
+  ```bash
+  node -v
+  npm -v
+  ```
 
-📝 Edit events in a table before exporting
+- **Git**  
+  Ensure Git is installed and configured:  
 
-📤 Export to .ics → import into Google Calendar, Apple Calendar, Outlook, etc.
+  ```bash
+  git --version
+  ```
 
-🚀 Getting Started
-1. Clone the repo
+## ⚙️ Setting Up Syllabus → Calendar
 
-git clone https://github.com/AlexAlexChen/syllabus-to-calendar.git
-cd syllabus-to-calendar
+1. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/AlexAlexChen/syllabus-to-calendar.git
+   ```
 
-2. Install dependencies
+2. **Navigate to the Project Root**  
+   ```bash
+   cd syllabus-to-calendar
+   ```
 
-npm install
+3. **Install Dependencies**  
+   ```bash
+   npm install
+   ```
 
-3. Run locally
+4. **Run the Development Server**  
+   ```bash
+   npm run dev
+   ```
 
-npm run dev
-App will be live at http://localhost:3000
+   By default, the app runs at:  
+   👉 http://localhost:3000
 
-4. Build & start
+---
 
-npm run build
-npm start
+## 🚀 Usage
 
-📂 Project Structure
+- Upload a syllabus PDF or paste text into the textarea.  
+- Click **Parse Text** to extract events.  
+- Single events (Midterms, Finals) are detected.  
+- Recurring classes (e.g., every Tue/Thu … from X to Y) are auto-detected and exported with an RRULE.  
+- Review and edit events in the table.  
+- Click **Export .ics** to download a calendar file.  
+- Import the `.ics` file into Google Calendar, Apple Calendar, or Outlook.
 
-app/api/parse/route.ts → Parse syllabus text, detect recurrence
+---
 
-app/api/ics/route.ts → Generate ICS with RRULE
+## 🛠️ Project Structure
 
-app/components/EventTable.tsx → Event editor table
+```
+app/
+  api/
+    parse/route.ts     → Parses syllabus text and detects recurring rules
+    ics/route.ts       → Generates `.ics` files with RRULE support
+  components/
+    EventTable.tsx     → Editable events table with export button
+  page.tsx             → Main app UI
 
-app/page.tsx → Main UI
+lib/
+  pdf.ts               → PDF text extraction using pdf.js
+```
 
-lib/pdf.ts → PDF text extraction (pdf.js)
+---
 
-🛠️ Tech Stack
+## 📝 Notes
 
-Next.js 15 (App Router)
-
-TypeScript
-
-TailwindCSS
-
-pdfjs-dist
-
-chrono-node
-
-ical-generator
+- The parser currently supports English syllabus formats.  
+- Recurring detection uses chrono-node and RRULE generation via ical-generator.  
+- Timezone defaults to your browser’s timezone when exporting `.ics`.  
